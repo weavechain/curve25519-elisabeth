@@ -38,13 +38,13 @@ dependencies {
 }
 
 java {
-    sourceCompatibility = JavaVersion.VERSION_1_7
-    targetCompatibility = JavaVersion.VERSION_1_7
+    sourceCompatibility = JavaVersion.VERSION_11
+    targetCompatibility = JavaVersion.VERSION_11
 }
 
 tasks.named<JavaCompile>("compileModuleInfoJava") {
-    sourceCompatibility = "9"
-    targetCompatibility = "9"
+    sourceCompatibility = "11"
+    targetCompatibility = "11"
 
     doLast {
         // Leave only the module-info.class
@@ -52,13 +52,8 @@ tasks.named<JavaCompile>("compileModuleInfoJava") {
     }
 }
 
-tasks.jar {
-    // Add the Java 9+ module-info.class to the Java 7+ classes
-    from(sourceSets["moduleInfo"].output)
-}
-
-group = "cafe.cryptography"
-version = "0.1.0"
+group = "com.weavechain"
+version = "0.1.3"
 
 tasks.register<Jar>("sourcesJar") {
     from(sourceSets.main.get().allJava)
@@ -95,29 +90,33 @@ publishing {
                     }
                 }
                 scm {
-                    connection.set("scm:git:git://github.com/cryptography-cafe/curve25519-elisabeth.git")
-                    developerConnection.set("scm:git:ssh://github.com:cryptography-cafe/curve25519-elisabeth.git")
-                    url.set("https://github.com/cryptography-cafe/curve25519-elisabeth/tree/master")
+                    connection.set("scm:git:git://github.com/weavechain/curve25519-elisabeth.git")
+                    developerConnection.set("scm:git:ssh://github.com:weavechain/curve25519-elisabeth.git")
+                    url.set("https://github.com/weavechain/curve25519-elisabeth/tree/master")
                 }
             }
         }
     }
     repositories {
         maven {
-            val releasesRepoUrl = "https://oss.sonatype.org/service/local/staging/deploy/maven2/"
-            val snapshotRepoUrl = "https://oss.sonatype.org/content/repositories/snapshots/"
-            url = uri(if (version.toString().endsWith("SNAPSHOT")) snapshotRepoUrl else releasesRepoUrl)
-            credentials {
-                val NEXUS_USERNAME: String? by project
-                val NEXUS_PASSWORD: String? by project
-                username = NEXUS_USERNAME ?: ""
-                password = NEXUS_PASSWORD ?: ""
-            }
+            url = uri("./build/repo")
+            name = "Maven"
+            //val releasesRepoUrl = "https://oss.sonatype.org/service/local/staging/deploy/maven2/"
+            //val snapshotRepoUrl = "https://oss.sonatype.org/content/repositories/snapshots/"
+            //url = uri(if (version.toString().endsWith("SNAPSHOT")) snapshotRepoUrl else releasesRepoUrl)
+            //credentials {
+            //    val NEXUS_USERNAME: String? by project
+            //    val NEXUS_PASSWORD: String? by project
+            //    username = NEXUS_USERNAME ?: ""
+            //    password = NEXUS_PASSWORD ?: ""
+            //}
         }
     }
 }
 
 signing {
+    useGpgCmd()
+    sign(configurations.archives.get())
     sign(publishing.publications["mavenJava"])
 }
 

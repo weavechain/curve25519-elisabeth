@@ -1,3 +1,3 @@
 module cafe.cryptography.curve25519_elisabeth {
-    exports cafe.cryptography.curve25519;
+    exports com.weavechain.curve25519;
 }

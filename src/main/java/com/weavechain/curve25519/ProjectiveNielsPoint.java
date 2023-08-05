@@ -12,7 +12,7 @@ import com.weavechain.subtle.ConstantTime;
  * A pre-computed point on the $\mathbb P^3$ model of the curve, represented as
  * $(Y+X, Y-X, Z, 2dXY)$ in "Niels coordinates".
  */
-class ProjectiveNielsPoint {
+public class ProjectiveNielsPoint {
     static final ProjectiveNielsPoint IDENTITY = new ProjectiveNielsPoint(FieldElement.ONE, FieldElement.ONE,
             FieldElement.ONE, FieldElement.ZERO);
 
@@ -64,7 +64,7 @@ class ProjectiveNielsPoint {
         return new ProjectiveNielsPoint.LookupTable(points);
     }
 
-    static class LookupTable {
+    public static class LookupTable {
         private final ProjectiveNielsPoint[] table;
 
         LookupTable(ProjectiveNielsPoint[] table) {

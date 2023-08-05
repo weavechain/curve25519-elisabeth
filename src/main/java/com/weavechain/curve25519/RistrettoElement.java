@@ -160,6 +160,10 @@ public class RistrettoElement implements Serializable {
         return new CompressedRistretto(s.toByteArray());
     }
 
+    public ProjectiveNielsPoint.LookupTable lookupTable() {
+        return ProjectiveNielsPoint.buildLookupTable(repr);
+    }
+
     /**
      * Constant-time equality check.
      * <p>

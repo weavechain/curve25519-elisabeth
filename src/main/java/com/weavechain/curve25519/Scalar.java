@@ -12,6 +12,8 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.ObjectStreamException;
 import java.io.Serializable;
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
 import java.util.Arrays;
 
 import com.weavechain.subtle.ConstantTime;
@@ -42,6 +44,15 @@ public class Scalar implements Serializable {
         }
         // Store a copy to prevent interior mutability
         this.s = Arrays.copyOf(s, s.length);
+    }
+
+    public boolean test(int bit) {
+        int idx = bit / 8;
+        return (s[idx] & (bit % 8)) != 0;
+    }
+
+    public int get(int idx) {
+        return s[idx];
     }
 
     /**
@@ -1176,6 +1187,43 @@ public class Scalar implements Serializable {
         e[63] += carry;
         /* each e[i] is between -8 and 7 */
         return e;
+    }
+
+    public byte[] toRadix2w(int w) {
+        long[] scalar64x4 = new long[4];
+        ByteBuffer.wrap(s).order(ByteOrder.LITTLE_ENDIAN).asLongBuffer().get(scalar64x4);
+
+        long radix = 1L << w;
+        long windowMask = radix - 1;
+
+        long carry = 0L;
+        byte[] digits = new byte[43];
+        int digitsCount = (256 + w - 1) / w;
+        for (int i = 0; i < digitsCount; i++) {
+            int bitOffset = i * w;
+            int u64Idx = bitOffset / 64;
+            int bitIdx = bitOffset % 64;
+
+            long bitBuf;
+            if (bitIdx < 64 - w || u64Idx == 3) {
+                bitBuf = scalar64x4[u64Idx] >>> bitIdx;
+            } else {
+                bitBuf = (scalar64x4[u64Idx] >>> bitIdx) | (scalar64x4[1 + u64Idx] << (64 - bitIdx));
+            }
+
+            long coef = carry + (bitBuf & windowMask);
+
+            carry = (coef + (radix / 2)) >>> w;
+            digits[i] = (byte) ((coef - (carry << w)));
+        }
+
+        if (w == 8) {
+            digits[digitsCount] += carry;
+        } else {
+            digits[digitsCount - 1] += (carry << w);
+        }
+
+        return digits;
     }
 
     /**

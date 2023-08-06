@@ -53,7 +53,7 @@ tasks.named<JavaCompile>("compileModuleInfoJava") {
 }
 
 group = "com.weavechain"
-version = "0.1.4"
+version = "0.1.5"
 
 tasks.register<Jar>("sourcesJar") {
     from(sourceSets.main.get().allJava)

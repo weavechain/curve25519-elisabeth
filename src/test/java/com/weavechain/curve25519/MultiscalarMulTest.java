@@ -13,7 +13,6 @@ import java.util.List;
 
 import static org.junit.Assert.assertTrue;
 
-
 public class MultiscalarMulTest {
 
     static final String[] FROM_UNIFORM_BYTES_INPUTS = new String[] {
@@ -52,14 +51,43 @@ public class MultiscalarMulTest {
         //warmup
         MulUtils.multiscalarMul(s1, s2, s3, p1, p2, p3);
         MulUtils.multiscalarMulStraus(s1, s2, s3, p1, p2, p3);
+        MulUtils.multiscalarMulPippenger(s1, s2, s3, p1, p2, p3);
+
+        RistrettoElement r4 = MulUtils.mulStraus(s1, s2.get(0), p1, p2.get(0));
+        RistrettoElement r5 = p1.multiply(s1).add(p2.get(0).multiply(s2.get(0)));
+        assertTrue(r4.equals(r5));
 
         long t1 = System.currentTimeMillis();
         RistrettoElement r1 = MulUtils.multiscalarMul(s1, s2, s3, p1, p2, p3);
         long t2 = System.currentTimeMillis();
         RistrettoElement r2 = MulUtils.multiscalarMulStraus(s1, s2, s3, p1, p2, p3);
         long t3 = System.currentTimeMillis();
+        RistrettoElement r3 = MulUtils.multiscalarMulPippenger(s1, s2, s3, p1, p2, p3);
+        long t4 = System.currentTimeMillis();
 
+        System.out.println((t2 - t1) + " vs " + (t3 - t2) + " vs " + (t4 - t3));
         assertTrue(r1.equals(r2));
-        System.out.println((t2 - t1) + " vs " + (t3 - t2));
+        assertTrue(r1.equals(r3));
+
+        int iter = 1000;
+        for (int k = 5; k < 100; k += 10) {
+            List<Scalar> st = s3.subList(0, k);
+            List<RistrettoElement> pt = p3.subList(0, k);
+
+            long m1 = System.currentTimeMillis();
+            for (int i = 0; i < iter; i++) {
+                MulUtils.mulStraus(st, pt);
+            }
+            long m2 = System.currentTimeMillis();
+            for (int i = 0; i < iter; i++) {
+                MulUtils.mulPippenger(st, pt);
+            }
+            long m3 = System.currentTimeMillis();
+            for (int i = 0; i < iter; i++) {
+                MulUtils.multiscalarMulOpt(st, pt);
+            }
+            long m4 = System.currentTimeMillis();
+            System.out.println(k + ": " + (m2 - m1) + " vs " + (m3 - m2) + " | " + (m4 - m3));
+        }
     }
 }

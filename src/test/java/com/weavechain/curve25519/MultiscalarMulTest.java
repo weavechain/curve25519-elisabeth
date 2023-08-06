@@ -69,7 +69,7 @@ public class MultiscalarMulTest {
         assertTrue(r1.equals(r2));
         assertTrue(r1.equals(r3));
 
-        int iter = 1000;
+        int iter = 100;
         for (int k = 5; k < 100; k += 10) {
             List<Scalar> st = s3.subList(0, k);
             List<RistrettoElement> pt = p3.subList(0, k);

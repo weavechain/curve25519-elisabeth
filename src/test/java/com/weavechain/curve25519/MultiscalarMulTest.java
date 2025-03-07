@@ -65,12 +65,12 @@ public class MultiscalarMulTest {
         RistrettoElement r3 = MulUtils.multiscalarMulPippenger(s1, s2, s3, p1, p2, p3);
         long t4 = System.currentTimeMillis();
 
-        System.out.println((t2 - t1) + " vs " + (t3 - t2) + " vs " + (t4 - t3));
+        System.out.println((t2 - t1) + " (multiscalarMul) vs " + (t3 - t2) + " (multiscalarMulStraus) vs " + (t4 - t3) + " (multiscalarMulPippenger)");
         assertTrue(r1.equals(r2));
         assertTrue(r1.equals(r3));
 
         int iter = 100;
-        for (int k = 5; k < 100; k += 10) {
+        for (int k = 5; k < 100; k += 5) {
             List<Scalar> st = s3.subList(0, k);
             List<RistrettoElement> pt = p3.subList(0, k);
 
@@ -87,7 +87,7 @@ public class MultiscalarMulTest {
                 MulUtils.multiscalarMulOpt(st, pt);
             }
             long m4 = System.currentTimeMillis();
-            System.out.println(k + ": " + (m2 - m1) + " vs " + (m3 - m2) + " | " + (m4 - m3));
+            System.out.println(k + ": " + (m2 - m1) + " (mulStraus) vs " + (m3 - m2) + " (mulPippenger) | " + (m4 - m3) + " (multiscalarMulOpt)");
         }
     }
 }

@@ -18,11 +18,11 @@ public class EdwardsBasepointTable {
      */
     public EdwardsBasepointTable(final EdwardsPoint basepoint) {
         this.tables = new AffineNielsPoint.LookupTable[32];
-        EdwardsPoint Bi = basepoint;
+        EdwardsPoint Bi = basepoint.copy();
         for (int i = 0; i < 32; i++) {
             this.tables[i] = AffineNielsPoint.buildLookupTable(Bi);
             // Only every second summand is precomputed (16^2 = 256)
-            Bi = Bi.multiplyByPow2(8);
+            Bi = Bi.multiplyByPow2InPlace(8);
         }
     }
 
@@ -42,7 +42,7 @@ public class EdwardsBasepointTable {
             h = h.add(this.tables[i / 2].select(e[i])).toExtended();
         }
 
-        h = h.multiplyByPow2(4);
+        h = h.multiplyByPow2InPlace(4);
 
         for (i = 0; i < 64; i += 2) {
             h = h.add(this.tables[i / 2].select(e[i])).toExtended();

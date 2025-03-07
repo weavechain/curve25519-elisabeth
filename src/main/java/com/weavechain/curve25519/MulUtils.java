@@ -42,10 +42,10 @@ public class MulUtils {
 
         EdwardsPoint Q = EdwardsPoint.IDENTITY;
         for (int i = 63; i >= 0; i--) {
-            Q = Q.multiplyByPow2(4);
+            Q = Q.multiplyByPow2InPlace(4);
 
-            Q = Q.add(n1.select(b1[i])).toExtended();
-            Q = Q.add(n2.select(b2[i])).toExtended();
+            Q = Q.addToExtended(n1.select(b1[i]));
+            Q = Q.addToExtended(n2.select(b2[i]));
         }
         return new RistrettoElement(Q);
     }
@@ -63,10 +63,10 @@ public class MulUtils {
 
         EdwardsPoint Q = EdwardsPoint.IDENTITY;
         for (int i = 63; i >= 0; i--) {
-            Q = Q.multiplyByPow2(4);
+            Q = Q.multiplyByPow2InPlace(4);
 
             for (int j = 0; j < p.size(); j++) {
-                Q = Q.add(lookups.get(j).select(scalars.get(j)[i])).toExtended();
+                Q = Q.addToExtended(lookups.get(j).select(scalars.get(j)[i]));
             }
         }
         return new RistrettoElement(Q);
@@ -143,18 +143,18 @@ public class MulUtils {
 
         EdwardsPoint Q = EdwardsPoint.IDENTITY;
         for (int i = 63; i >= 0; i--) {
-            Q = Q.multiplyByPow2(4);
+            Q = Q.multiplyByPow2InPlace(4);
 
             if (p1 != null) {
                 for (int j = 0; j < p1.size(); j++) {
                     final byte[] e = scalars.get(j);
-                    Q = Q.add(lookups.get(j).select(e[i])).toExtended();
+                    Q = Q.addToExtended(lookups.get(j).select(e[i]));
                 }
             }
             if (p2 != null) {
                 for (int j = 0; j < p2.size(); j++) {
                     final byte[] e = scalars.get(j + offset);
-                    Q = Q.add(lookups.get(j + offset).select(e[i])).toExtended();
+                    Q = Q.addToExtended(lookups.get(j + offset).select(e[i]));
                 }
             }
         }

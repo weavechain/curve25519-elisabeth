@@ -59,7 +59,7 @@ public class ProjectiveNielsPoint {
         final ProjectiveNielsPoint[] points = new ProjectiveNielsPoint[8];
         points[0] = P.toProjectiveNiels();
         for (int i = 0; i < 7; i++) {
-            points[i + 1] = P.add(points[i]).toExtended().toProjectiveNiels();
+            points[i + 1] = P.addToExtended(points[i]).toProjectiveNiels();
         }
         return new ProjectiveNielsPoint.LookupTable(points);
     }
@@ -112,7 +112,7 @@ public class ProjectiveNielsPoint {
         points[0] = P.toProjectiveNiels();
         EdwardsPoint P2 = P.dbl();
         for (int i = 0; i < 7; i++) {
-            points[i + 1] = P2.add(points[i]).toExtended().toProjectiveNiels();
+            points[i + 1] = P2.addToExtended(points[i]).toProjectiveNiels();
         }
         return new ProjectiveNielsPoint.NafLookupTable(points);
     }

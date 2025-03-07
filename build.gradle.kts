@@ -53,7 +53,7 @@ tasks.named<JavaCompile>("compileModuleInfoJava") {
 }
 
 group = "com.weavechain"
-version = "0.1.5"
+version = "0.1.7"
 
 tasks.register<Jar>("sourcesJar") {
     from(sourceSets.main.get().allJava)
@@ -122,8 +122,8 @@ signing {
 
 tasks.jacocoTestReport {
     reports {
-        xml.isEnabled = true
-        html.isEnabled = false
+        xml.required.set(true)
+        html.required.set(false)
     }
 }
 tasks.check {

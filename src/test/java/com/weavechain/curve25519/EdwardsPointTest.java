@@ -156,6 +156,16 @@ public class EdwardsPointTest {
     }
 
     @Test
+    public void multiplicationsTest() {
+        for  (int k = 1; k <= 8; k++) {
+            System.out.println(k);
+            EdwardsPoint B2a = Constants.ED25519_BASEPOINT.dbl();
+            EdwardsPoint B2b = Constants.ED25519_BASEPOINT.dbl();
+            assertThat(B2a.multiplyByPow2(k), Matchers.is(B2b.multiplyByPow2loop(k)));
+        }
+    }
+
+    @Test
     public void basepointDoubleMinusBasepoint() {
         EdwardsPoint B2 = Constants.ED25519_BASEPOINT.dbl();
         assertThat(B2.subtract(Constants.ED25519_BASEPOINT), Matchers.is(Constants.ED25519_BASEPOINT));
@@ -216,6 +226,11 @@ public class EdwardsPointTest {
     @Test
     public void basepointMulByPow24VsBasepoint16Constant() throws InvalidEncodingException {
         assertThat(Constants.ED25519_BASEPOINT.multiplyByPow2(4), is(BASE16_CMPRSSD.decompress()));
+    }
+
+    @Test
+    public void basepointProjExt() throws InvalidEncodingException {
+        assertThat(Constants.ED25519_BASEPOINT.toProjective().toExtended(), is(Constants.ED25519_BASEPOINT));
     }
 
     @Test

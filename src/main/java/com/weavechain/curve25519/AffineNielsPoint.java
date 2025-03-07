@@ -57,7 +57,7 @@ class AffineNielsPoint {
         AffineNielsPoint[] points = new AffineNielsPoint[8];
         points[0] = P.toAffineNiels();
         for (int i = 0; i < 7; i++) {
-            points[i + 1] = P.add(points[i]).toExtended().toAffineNiels();
+            points[i + 1] = P.addToExtended(points[i]).toAffineNiels();
         }
         return new AffineNielsPoint.LookupTable(points);
     }
@@ -110,7 +110,7 @@ class AffineNielsPoint {
         points[0] = P.toAffineNiels();
         EdwardsPoint P2 = P.dbl();
         for (int i = 0; i < 7; i++) {
-            points[i + 1] = P2.add(points[i]).toExtended().toAffineNiels();
+            points[i + 1] = P2.addToExtended(points[i]).toAffineNiels();
         }
         return new AffineNielsPoint.NafLookupTable(points);
     }
